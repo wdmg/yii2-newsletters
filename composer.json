@@ -1,0 +1,40 @@
+{
+  "name": "wdmg/yii2-newsletters",
+  "description": "Newsletters manager",
+  "keywords": ["yii2", "yii2-newsletters", "newsletters manager", "wdmg"],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "version": "0.0.1",
+  "homepage": "https://github.com/wdmg/yii2-newsletters",
+  "support": {
+    "source": "https://github.com/wdmg/yii2-newsletters",
+    "issues": "https://github.com/wdmg/yii2-newsletters/issues"
+  },
+  "authors": [
+    {
+      "name": "Alexsander Vyshnyvetskyy",
+      "email": "alex.vyshnyvetskyy@gmail.com"
+    },
+    {
+      "name": "W.D.M.Group, Ukraine",
+      "email": "wdmg.com.ua@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "^2.0.20",
+    "wdmg/yii2-base": "^1.0.1",
+    "wdmg/yii2-selectinput": "^1.0.5",
+    "wdmg/yii2-editor": "^1.0.6"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "wdmg\\newsletters\\": ""
+    }
+  },
+  "extra": {
+    "options": {
+      "routePrefix": "admin"
+    }
+  }
+}
