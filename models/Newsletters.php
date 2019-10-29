@@ -103,8 +103,8 @@ class Newsletters extends ActiveRecord
             'params' => Yii::t('app/modules/newsletters', 'Params'),
             'created_at' => Yii::t('app/modules/newsletters', 'Created at'),
             'created_by' => Yii::t('app/modules/newsletters', 'Created by'),
-            'updated_at' => Yii::t('app/modules/newsletters', 'Updated_at'),
-            'updated_by' => Yii::t('app/modules/newsletters', 'Updated_by'),
+            'updated_at' => Yii::t('app/modules/newsletters', 'Updated at'),
+            'updated_by' => Yii::t('app/modules/newsletters', 'Updated by'),
         ];
     }
 

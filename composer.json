@@ -4,7 +4,7 @@
   "keywords": ["yii2", "yii2-newsletters", "newsletters manager", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/wdmg/yii2-newsletters",
   "support": {
     "source": "https://github.com/wdmg/yii2-newsletters",

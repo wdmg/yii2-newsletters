@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         0.0.1
+ * @version         0.0.2
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 W.D.M.Group, Ukraine
@@ -30,12 +30,12 @@ class Module extends BaseModule
     /**
      * {@inheritdoc}
      */
-    public $defaultRoute = "list/all";
+    public $defaultRoute = "list/index";
 
     /**
      * @var string, the name of module
      */
-    public $name = "Subscribers";
+    public $name = "Newsletters";
 
     /**
      * @var string, the description of module
@@ -45,7 +45,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "0.0.1";
+    private $version = "0.0.2";
 
     /**
      * @var integer, priority of initialization

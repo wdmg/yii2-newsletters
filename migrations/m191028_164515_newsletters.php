@@ -44,8 +44,6 @@ class m191028_164515_newsletters extends Migration
             '{{%newsletters}}',
             [
                 'title',
-                'description',
-                'content',
                 'layouts',
                 'unique_token',
                 'status',
