@@ -2,6 +2,7 @@
 
 namespace wdmg\newsletters\models;
 
+use wdmg\helpers\ArrayHelper;
 use Yii;
 use yii\db\Expression;
 use yii\db\ActiveRecord;
@@ -14,9 +15,11 @@ use yii\behaviors\BlameableBehavior;
  * @property int $id
  * @property string $title
  * @property string $description
+ * @property string $subject
  * @property string $content
  * @property string $layouts
  * @property string $recipients
+ * @property string $_recipient
  * @property string $unique_token
  * @property integer $status
  * @property string $workflow
@@ -30,6 +33,7 @@ class Newsletters extends ActiveRecord
 {
     const NEWSLETTERS_STATUS_DISABLED = 0;
     const NEWSLETTERS_STATUS_ACTIVE = 1;
+    public $_recipient;
 
     /**
      * {@inheritdoc}
@@ -52,16 +56,13 @@ class Newsletters extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
                 ],
                 'value' => new Expression('NOW()'),
-            ]
-        ];
-
-        if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
-            $behaviors['blameable'] = [
+            ],
+            'blameable' =>  [
                 'class' => BlameableBehavior::className(),
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
-            ];
-        }
+            ],
+        ];
 
         return $behaviors;
     }
@@ -72,11 +73,11 @@ class Newsletters extends ActiveRecord
     public function rules()
     {
         $rules = [
-            [['title', 'content', 'layouts', 'recipients'], 'required'],
-            [['title', 'layouts'], 'string', 'max' => 255],
+            [['title', 'subject', 'content', 'layouts', 'recipients'], 'required'],
+            [['title', 'subject', 'layouts'], 'string', 'max' => 255],
             [['description', 'content', 'recipients', 'workflow', 'params'], 'string'],
             [['status'], 'boolean'],
-            [['unique_token', 'created_at', 'updated_at'], 'safe'],
+            [['_recipient', 'unique_token', 'created_at', 'updated_at'], 'safe'],
         ];
 
         if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
@@ -85,6 +86,23 @@ class Newsletters extends ActiveRecord
 
         return $rules;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeSave($insert)
+    {
+        $this->unique_token = Yii::$app->security->generateRandomString(32);
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->unique_token = Yii::$app->security->generateRandomString(32);
+            }
+            return true;
+        }
+        return false;
+
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -94,8 +112,9 @@ class Newsletters extends ActiveRecord
             'id' => Yii::t('app/modules/newsletters', 'ID'),
             'title' => Yii::t('app/modules/newsletters', 'Title'),
             'description' => Yii::t('app/modules/newsletters', 'Description'),
+            'subject' => Yii::t('app/modules/newsletters', 'Subject'),
             'content' => Yii::t('app/modules/newsletters', 'Content'),
-            'layouts' => Yii::t('app/modules/newsletters', 'Layouts'),
+            'layouts' => Yii::t('app/modules/newsletters', 'Layout'),
             'recipients' => Yii::t('app/modules/newsletters', 'Recipients'),
             'unique_token' => Yii::t('app/modules/newsletters', 'Unique token'),
             'status' => Yii::t('app/modules/newsletters', 'Status'),
@@ -127,11 +146,89 @@ class Newsletters extends ActiveRecord
     }
 
     /**
+     * @return array of list
+     */
+    public function getLayouts($notSelected = false)
+    {
+        if($notSelected)
+            $list[] = [
+                '*' => Yii::t('app/modules/newsletters', 'Not selected')
+            ];
+
+        $list[] = [
+            '@app/mail/layouts' => '@app/mail/layouts',
+            '@wdmg/newsletters/mail/layouts' => '@wdmg/newsletters/mail/layouts'
+        ];
+
+        return $list;
+    }
+
+    /**
+     * @return object of \yii\db\ActiveQuery
+     */
+    public function getSubscribers($cond = null, $select = ['id', 'email'], $asArray = false)
+    {
+        if (class_exists('\wdmg\subscribers\models\SubscribersList')) {
+            if ($cond) {
+
+                $list = new \wdmg\subscribers\models\Subscribers();
+
+                if ($asArray)
+                    return $list::find()->select($select)->where($cond)->asArray()->indexBy('id')->all();
+                else
+                    return $list::find()->select($select)->where($cond)->all();
+
+            } else {
+
+                $list = new \wdmg\subscribers\models\Subscribers();
+
+                if ($asArray)
+                    return $list::find()->select($select)->asArray()->indexBy('id')->all();
+                else
+                    return $list::find()->select($select)->all();
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return object of \yii\db\ActiveQuery
+     */
+    public function getSubscribersList($id = null, $select = ['id', 'email'], $asArray = false)
+    {
+        if (class_exists('\wdmg\subscribers\models\SubscribersList')) {
+            if ($cond) {
+
+                $list = new \wdmg\subscribers\models\SubscribersList();
+
+                if ($asArray)
+                    return $list::find()->select($select)->where($cond)->asArray()->indexBy('id')->one();
+                else
+                    return $list::find()->select($select)->where($cond)->one();
+
+            } else {
+
+                $list = new \wdmg\subscribers\models\SubscribersList();
+
+                if ($asArray)
+                    return $list::find()->select($select)->asArray()->indexBy('id')->all();
+                else
+                    return $list::find()->select($select)->all();
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @return object of \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        if(class_exists('\wdmg\users\models\Users'))
+        if (class_exists('\wdmg\users\models\Users'))
             return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
         else
             return null;
@@ -142,7 +239,7 @@ class Newsletters extends ActiveRecord
      */
     public function getUsers()
     {
-        if(class_exists('\wdmg\users\models\Users'))
+        if (class_exists('\wdmg\users\models\Users'))
             return $this->hasMany(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
         else
             return null;

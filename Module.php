@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         0.0.2
+ * @version         0.0.3
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 W.D.M.Group, Ukraine
@@ -45,12 +45,27 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "0.0.2";
+    private $version = "0.0.3";
 
     /**
      * @var integer, priority of initialization
      */
     private $priority = 10;
+
+    /**
+     * @var array, mail variables
+     */
+    private $mailVars = [
+        '{welcome}' => 'Return the welcome message',
+        '{site.name}' => 'Return site name',
+        '{site.url}' => 'Return site URL with scheme',
+        '{app.name}' => 'Return name of app',
+        '{domain}' => 'Return domain name',
+        '{date}' => 'Return current date',
+        '{time}' => 'Return current time',
+        '{datetime}' => 'Return current date and time',
+        '{signature}' => 'Return default signature',
+    ];
 
     /**
      * {@inheritdoc}
@@ -87,5 +102,14 @@ class Module extends BaseModule
     public function bootstrap($app)
     {
         parent::bootstrap($app);
+    }
+
+    /**
+     * Return the mail variables
+     * @return array, mail variables
+     */
+    public function getMailVars()
+    {
+        return $this->mailVars;
     }
 }

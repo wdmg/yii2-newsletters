@@ -69,31 +69,94 @@ class ListController extends Controller
     {
         $searchModel = new NewslettersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionView()
+    public function actionView($id)
     {
-        return $this->run('index');
+        $model = $this->findModel($id);
+        return $this->render('view', [
+            'model' => $model
+        ]);
     }
 
-    public function actionUpdate()
+    public function actionUpdate($id)
     {
-        return $this->run('index');
+        $model = $this->findModel($id);
+
+        if (Yii::$app->request->isAjax && ($value = Yii::$app->request->get('value'))) {
+            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
+            $response = [];
+            foreach ($subscribers as $id => $subscriber) {
+                $response['email_id:'.$id] = ($subscriber['name']) ? $subscriber['name'] . htmlspecialchars(' <'. $subscriber['email'] .'>') : $subscriber['email'];
+            }
+            return $this->asJson($response);
+        }
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->save())
+                Yii::$app->getSession()->setFlash(
+                    'success',
+                    Yii::t('app/modules/newsletters', 'Newsletter has been successfully updated!')
+                );
+            else
+                Yii::$app->getSession()->setFlash(
+                    'danger',
+                    Yii::t('app/modules/newsletters', 'An error occurred while updating the newsletter.')
+                );
+
+        }
+
+        return $this->render('update', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
     }
 
     public function actionCreate()
     {
-        return $this->run('index');
+        $model = new Newsletters();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->save())
+                Yii::$app->getSession()->setFlash(
+                    'success',
+                    Yii::t('app/modules/newsletters', 'Newsletter has been successfully created!')
+                );
+            else
+                Yii::$app->getSession()->setFlash(
+                    'danger',
+                    Yii::t('app/modules/newsletters', 'An error occurred while creating the newsletter.')
+                );
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
     }
 
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        return $this->run('index');
+        if ($this->findModel($id)->delete())
+            Yii::$app->getSession()->setFlash(
+                'success',
+                Yii::t('app/modules/newsletters', 'Newsletter has been successfully deleted!')
+            );
+        else
+            Yii::$app->getSession()->setFlash(
+                'danger',
+                Yii::t('app/modules/newsletters', 'An error occurred while deleting the newsletter.')
+            );
+
+        return $this->redirect(['index']);
     }
 
     /**

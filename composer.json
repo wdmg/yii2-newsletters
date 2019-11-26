@@ -4,7 +4,7 @@
   "keywords": ["yii2", "yii2-newsletters", "newsletters manager", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/wdmg/yii2-newsletters",
   "support": {
     "source": "https://github.com/wdmg/yii2-newsletters",
@@ -24,6 +24,7 @@
     "yiisoft/yii2": "^2.0.20",
     "wdmg/yii2-base": "^1.0.1",
     "wdmg/yii2-selectinput": "^1.0.5",
+    "wdmg/yii2-tagsinput": "^1.0.1",
     "wdmg/yii2-editor": "^1.0.6"
   },
   "minimum-stability": "dev",

@@ -18,7 +18,7 @@ class NewslettersSearch extends Newsletters
     {
         return [
             [['id'], 'integer'],
-            [['title', 'description', 'content', 'layouts', 'recipients', 'status'], 'safe'],
+            [['title', 'description', 'subject', 'content', 'layouts', 'recipients', 'status'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class NewslettersSearch extends Newsletters
 
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'subject', $this->subject])
             ->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'layouts', $this->layouts])
             ->andFilterWhere(['like', 'recipients', $this->recipients]);

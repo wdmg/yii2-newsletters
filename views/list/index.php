@@ -30,8 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'title',
             'description',
+            'subject',
             'content',
-            'layouts',
+            /*'layouts',*/
             'recipients',
             /*'unique_token',*/
             [

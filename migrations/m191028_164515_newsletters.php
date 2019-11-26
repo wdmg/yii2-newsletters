@@ -22,6 +22,7 @@ class m191028_164515_newsletters extends Migration
             'title' => $this->string(255),
             'description' => $this->text(),
 
+            'subject' => $this->string(255),
             'content' => $this->text(),
 
             'layouts' => $this->string(255)->notNull(),
@@ -44,6 +45,7 @@ class m191028_164515_newsletters extends Migration
             '{{%newsletters}}',
             [
                 'title',
+                'subject',
                 'layouts',
                 'unique_token',
                 'status',
