@@ -66,6 +66,7 @@ class NewslettersSearch extends Newsletters
             ->andFilterWhere(['like', 'subject', $this->subject])
             ->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'layouts', $this->layouts])
+            ->andFilterWhere(['like', 'views', $this->views])
             ->andFilterWhere(['like', 'recipients', $this->recipients]);
 
 

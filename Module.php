@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         0.0.3
+ * @version         1.0.0
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 W.D.M.Group, Ukraine
@@ -43,9 +43,14 @@ class Module extends BaseModule
     public $description = "Newsletter manager";
 
     /**
+     * @var string, the description of module
+     */
+    public $newsletterEmail = "no-reply@example.com";
+
+    /**
      * @var string the module version
      */
-    private $version = "0.0.3";
+    private $version = "1.0.0";
 
     /**
      * @var integer, priority of initialization

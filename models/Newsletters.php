@@ -8,6 +8,8 @@ use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use yii\validators\EmailValidator;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "{{%newsletters}}".
@@ -18,6 +20,7 @@ use yii\behaviors\BlameableBehavior;
  * @property string $subject
  * @property string $content
  * @property string $layouts
+ * @property string $views
  * @property string $recipients
  * @property string $_recipient
  * @property string $unique_token
@@ -42,6 +45,13 @@ class Newsletters extends ActiveRecord
     {
         return '{{%newsletters}}';
     }
+
+    /*public function init() {
+        parent::init();
+        if ($this->isNewRecord) {
+            $this->recipients = Json::encode((object) array());
+        }
+    }*/
 
     /**
      * {@inheritdoc}
@@ -74,7 +84,7 @@ class Newsletters extends ActiveRecord
     {
         $rules = [
             [['title', 'subject', 'content', 'layouts', 'recipients'], 'required'],
-            [['title', 'subject', 'layouts'], 'string', 'max' => 255],
+            [['title', 'subject', 'layouts', 'views'], 'string', 'max' => 255],
             [['description', 'content', 'recipients', 'workflow', 'params'], 'string'],
             [['status'], 'boolean'],
             [['_recipient', 'unique_token', 'created_at', 'updated_at'], 'safe'],
@@ -114,7 +124,8 @@ class Newsletters extends ActiveRecord
             'description' => Yii::t('app/modules/newsletters', 'Description'),
             'subject' => Yii::t('app/modules/newsletters', 'Subject'),
             'content' => Yii::t('app/modules/newsletters', 'Content'),
-            'layouts' => Yii::t('app/modules/newsletters', 'Layout'),
+            'layouts' => Yii::t('app/modules/newsletters', 'Layouts'),
+            'views' => Yii::t('app/modules/newsletters', 'Views'),
             'recipients' => Yii::t('app/modules/newsletters', 'Recipients'),
             'unique_token' => Yii::t('app/modules/newsletters', 'Unique token'),
             'status' => Yii::t('app/modules/newsletters', 'Status'),
@@ -148,19 +159,65 @@ class Newsletters extends ActiveRecord
     /**
      * @return array of list
      */
+
+    /**
+     * @return array of list
+     */
     public function getLayouts($notSelected = false)
     {
+        $list = [];
+
         if($notSelected)
             $list[] = [
                 '*' => Yii::t('app/modules/newsletters', 'Not selected')
             ];
 
-        $list[] = [
-            '@app/mail/layouts' => '@app/mail/layouts',
-            '@wdmg/newsletters/mail/layouts' => '@wdmg/newsletters/mail/layouts'
-        ];
+        foreach (Yii::$app->extensions as $extension) {
+            $aliases = array_keys($extension['alias']);
+            foreach ($aliases as $alias) {
+                if (is_dir(Yii::getAlias($alias . '/mail/layouts'))) {
+                    $files = \yii\helpers\FileHelper::findFiles(Yii::getAlias($alias . '/mail/layouts'), ['only' => ['html.php', 'text.php'], 'recursive' => true]);
+                    foreach ($files as $file) {
+                        $filename = str_replace('html.php', '', $file);
+                        $filename = str_replace('text.php', '', $filename);
+                        $filename = str_replace(Yii::getAlias($alias . '/mail'), $alias . '/mail', $filename);
+                        $list[$filename] = $filename.'<span class="text-muted">[html|text]</span>'.'.php';
+                    }
+                }
+            }
+        }
 
-        return $list;
+        return array_unique($list);
+    }
+
+    /**
+     * @return array of list
+     */
+    public function getViews($notSelected = false)
+    {
+        $list = [];
+
+        if($notSelected)
+            $list[] = [
+                '*' => Yii::t('app/modules/newsletters', 'Not selected')
+            ];
+
+        foreach (Yii::$app->extensions as $extension) {
+            $aliases = array_keys($extension['alias']);
+            foreach ($aliases as $alias) {
+                if (is_dir(Yii::getAlias($alias . '/mail'))) {
+                    $files = \yii\helpers\FileHelper::findFiles(Yii::getAlias($alias . '/mail'), ['only' => ['*-html.php', '*-text.php'], 'recursive' => true]);
+                    foreach ($files as $file) {
+                        $filename = str_replace('-html.php', '', $file);
+                        $filename = str_replace('-text.php', '', $filename);
+                        $filename = str_replace(Yii::getAlias($alias . '/mail'), $alias . '/mail', $filename);
+                        $list[$filename] = $filename.'-'.'<span class="text-muted">[html|text]</span>'.'.php';
+                    }
+                }
+            }
+        }
+
+        return array_unique($list);
     }
 
     /**
@@ -168,7 +225,7 @@ class Newsletters extends ActiveRecord
      */
     public function getSubscribers($cond = null, $select = ['id', 'email'], $asArray = false)
     {
-        if (class_exists('\wdmg\subscribers\models\SubscribersList')) {
+        if (class_exists('\wdmg\subscribers\models\Subscribers')) {
             if ($cond) {
 
                 $list = new \wdmg\subscribers\models\Subscribers();
@@ -196,7 +253,75 @@ class Newsletters extends ActiveRecord
     /**
      * @return object of \yii\db\ActiveQuery
      */
-    public function getSubscribersList($id = null, $select = ['id', 'email'], $asArray = false)
+    public function getSubscribersFromList($cond = null)
+    {
+        if (class_exists('\wdmg\subscribers\models\Subscribers')) {
+            if ($cond) {
+                $list = new \wdmg\subscribers\models\Subscribers();
+                return $list::find()->select(['id', 'email'])->where($cond)->asArray()->indexBy('id')->all();
+            } else {
+                $list = new \wdmg\subscribers\models\Subscribers();
+                return $list::find()->select(['id', 'email'])->asArray()->indexBy('id')->all();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return object of \yii\db\ActiveQuery
+     */
+    public function getRecipients()
+    {
+        $emails = [];
+        $validator = new EmailValidator();
+        $data = \yii\helpers\Json::decode($this->recipients);
+
+        foreach ($data as $key => $item) {
+            if (preg_match('/email_id:(\d)/', $key)) {
+                if ($validator->validate($item)) {
+                    $emails[] = $item;
+                }
+            } else if (preg_match('/list_id:(\d)/', $key, $match)) {
+                if ($list = $this->getSubscribersFromList(['list_id' => intval($match[1])])) {
+                    foreach ($list as $key => $item) {
+                        if ($validator->validate($item['email'])) {
+                            $emails[] = $item['email'];
+                        }
+                    }
+                }
+            } else {
+                if ($validator->validate($item)) {
+                    $emails[] = $item;
+                }
+            }
+        }
+        return $emails;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSubscribersCount($cond = null)
+    {
+        if (class_exists('\wdmg\subscribers\models\Subscribers')) {
+            if ($cond) {
+                $list = new \wdmg\subscribers\models\Subscribers();
+                return $list::find()->select('COUNT(*) AS count')->where($cond)->count();
+            } else {
+                $list = new \wdmg\subscribers\models\Subscribers();
+                return $list::find()->select('COUNT(*) AS count')->count();
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return object of \yii\db\ActiveQuery
+     */
+    public function getSubscribersList($cond = null, $select = ['id', 'title'], $asArray = false)
     {
         if (class_exists('\wdmg\subscribers\models\SubscribersList')) {
             if ($cond) {
@@ -204,9 +329,9 @@ class Newsletters extends ActiveRecord
                 $list = new \wdmg\subscribers\models\SubscribersList();
 
                 if ($asArray)
-                    return $list::find()->select($select)->where($cond)->asArray()->indexBy('id')->one();
+                    return $list::find()->select($select)->where($cond)->asArray()->indexBy('id')->all();
                 else
-                    return $list::find()->select($select)->where($cond)->one();
+                    return $list::find()->select($select)->where($cond)->all();
 
             } else {
 

@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this \yii\web\View view component instance */
 /* @var $message \yii\mail\MessageInterface the message being composed */
@@ -15,7 +16,6 @@ use yii\helpers\Html;
     </head>
     <body>
     <?php $this->beginBody() ?>
-    <h1>Newsletters from <?= Yii::$app->getHomeUrl() ?></h1>
     <?= $content ?>
     <?php $this->endBody() ?>
     </body>

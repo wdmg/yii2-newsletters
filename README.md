@@ -11,8 +11,11 @@ newsletters manager for Yii2
 * PHP 5.6 or higher
 * Yii2 v.2.0.20 and newest
 * [Yii2 Base](https://github.com/wdmg/yii2-base) module (required)
-* [Yii2 Editor](https://github.com/wdmg/yii2-editor) module
-* [Yii2 SelectInput](https://github.com/wdmg/yii2-selectinput) widget
+* [Yii2 Mailer](https://github.com/wdmg/yii2-mailer) module (optionality)
+* [Yii2 Options](https://github.com/wdmg/yii2-options) module (optionality)
+* [Yii2 Editor](https://github.com/wdmg/yii2-editor) module (required)
+* [Yii2 TagsInput](https://github.com/wdmg/yii2-tagsinput) widget (required)
+* [Yii2 SelectInput](https://github.com/wdmg/yii2-selectinput) widget (required)
 
 # Installation
 To install the module, run the following command in the console:
@@ -60,6 +63,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.0 - Added layouts and views for sent mails, process action`s for sent messages
 * v.0.0.3 - Added views, email layouts and tagsinput widget for recipients form
 * v.0.0.2 - Added translations, base controllers and views
 * v.0.0.1 - Added migrations and models

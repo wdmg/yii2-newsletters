@@ -40,6 +40,13 @@ use wdmg\widgets\TagsInput;
         ]
     ]); ?>
 
+    <?= $form->field($model, 'views')->widget(SelectInput::className(), [
+        'items' => $model->getViews(),
+        'options' => [
+            'class' => 'form-control'
+        ]
+    ]); ?>
+
     <?= $form->field($model, 'recipients')->widget(TagsInput::className(), [
         'options' => [
             'class' => 'form-control'

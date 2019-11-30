@@ -2,14 +2,19 @@
 
 namespace wdmg\newsletters\controllers;
 
+use wdmg\helpers\ArrayHelper;
 use Yii;
 use wdmg\newsletters\models\Newsletters;
 use wdmg\newsletters\models\NewslettersSearch;
 use yii\db\ActiveRecord;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\base\InvalidConfigException;
+use yii\validators\EmailValidator;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use wdmg\helpers\StringHelper;
 
 /**
  * ListController implements the CRUD actions for Newsletters model.
@@ -69,6 +74,7 @@ class ListController extends Controller
     {
         $searchModel = new NewslettersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -83,16 +89,112 @@ class ListController extends Controller
         ]);
     }
 
+
+    public function actionProcess($id, $newsletter)
+    {
+        $model = $this->findModel($id);
+        $validator = new EmailValidator();
+
+        if ($newsletter == "run") {
+
+            $recipients = $model->getRecipients();
+            $recipients = array_unique($recipients);
+
+            $email_from = $this->module->newsletterEmail;
+            if(isset(Yii::$app->params['newsletterEmail']))
+                $email_from = Yii::$app->params['newsletterEmail'];
+
+            if (is_null($email_from) || !($validator->validate($email_from)))
+                throw new InvalidConfigException(Yii::t('app/modules/newsletters', 'Param `newsletterEmail` must be a valid email adress.'));
+
+            $workflow = [];
+            if ($mailer = Yii::$app->getMailer()) {
+
+                if (!is_null($model->layouts)) {
+                    if (is_dir(Yii::getAlias($model->layouts))) {
+                        //$mailer->viewPath = $model->layouts;
+
+                        if (file_exists(Yii::getAlias($model->layouts.'/layouts/html.php')))
+                            $mailer->htmlLayout = 'layouts/html';
+
+                        if (file_exists(Yii::getAlias($model->layouts.'/layouts/text.php')))
+                            $mailer->htmlLayout = 'layouts/text';
+
+                    }
+                }
+
+                $views = null;
+                if (!is_null($model->views)) {
+                    if (is_dir(Yii::getAlias($model->views))) {
+
+                        if (file_exists(Yii::getAlias($model->views.'/html.php')))
+                            $views['html'] = $model->views.'/html';
+
+                        if (file_exists(Yii::getAlias($model->views.'-html.php')))
+                            $views['html'] = $model->views.'-html';
+
+                        if (file_exists(Yii::getAlias($model->views.'/text.php')))
+                            $views['text'] = $model->views.'/text';
+
+                        if (file_exists(Yii::getAlias($model->views.'-text.php')))
+                            $views['text'] = $model->views.'-text';
+
+                    }
+                }
+
+                foreach ($recipients as $email_to) {
+
+                    if ($compose = $mailer->compose($views, ['content' => $model->content])) {
+
+                        $compose->setFrom($email_from)
+                            ->setTo($email_to)
+                            ->setSubject($model->subject);
+
+                        if (is_null($views)) {
+                            $compose->setHtmlBody($model->content);
+                            $compose->setTextBody(StringHelper::stripTags($model->content, "", " "));
+                        }
+
+                        if ($compose->send()) {
+
+                            $workflow[$email_to] = [
+                                'is_send' => true
+                            ];
+                        } else {
+                            $workflow[$email_to] = [
+                                'is_send' => false
+                            ];
+                        }
+
+                    }
+                }
+            }
+            $model->updateAttributes(['workflow' => Json::encode($workflow)]);
+        } else if ($newsletter == "refresh") {
+            $model->updateAttributes(['workflow' => Json::encode([])]);
+        }
+
+        die();
+        $this->redirect(['list/index']);
+    }
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if (Yii::$app->request->isAjax && ($value = Yii::$app->request->get('value'))) {
-            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
+
             $response = [];
+            $list = $model->getSubscribersList(['like', 'title', $value], ['id', 'title'], true);
+            foreach ($list as $id => $item) {
+                $response['list_id:'.$id] = $item['title'];
+            }
+
+            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
             foreach ($subscribers as $id => $subscriber) {
                 $response['email_id:'.$id] = ($subscriber['name']) ? $subscriber['name'] . htmlspecialchars(' <'. $subscriber['email'] .'>') : $subscriber['email'];
             }
+
             return $this->asJson($response);
         }
 
@@ -120,6 +222,22 @@ class ListController extends Controller
     public function actionCreate()
     {
         $model = new Newsletters();
+
+        if (Yii::$app->request->isAjax && ($value = Yii::$app->request->get('value'))) {
+
+            $response = [];
+            $list = $model->getSubscribersList(['like', 'title', $value], ['id', 'title'], true);
+            foreach ($list as $id => $item) {
+                $response['list_id:'.$id] = $item['title'];
+            }
+
+            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
+            foreach ($subscribers as $id => $subscriber) {
+                $response['email_id:'.$id] = ($subscriber['name']) ? $subscriber['name'] . htmlspecialchars(' <'. $subscriber['email'] .'>') : $subscriber['email'];
+            }
+
+            return $this->asJson($response);
+        }
 
         if ($model->load(Yii::$app->request->post())) {
 

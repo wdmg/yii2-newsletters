@@ -25,7 +25,32 @@ $this->params['breadcrumbs'][] = $this->title;
             'subject',
             'content:html',
             'layouts',
-            'recipients',
+            'views',
+            [
+                'attribute' => 'recipients',
+                'format' => 'html',
+                'value' => function($data) use ($model) {
+                    $lists = [];
+                    $emails = [];
+                    $data = \yii\helpers\Json::decode($data->recipients);
+                    foreach ($data as $key => $item) {
+
+                        if (preg_match('/email_id:(\d)/', $key)) {
+                            $emails[] = '<span class="label label-info">' . $item . '</span>';
+                        } elseif (preg_match('/list_id:(\d)/', $key, $match)) {
+                            $count = $model->getSubscribersCount(['list_id' => intval($match[1])]);
+                            if (!is_null($count))
+                                $lists[] = '<span class="label label-warning">' . $item . ' ('.$count.')</span>';
+                            else
+                                $lists[] = '<span class="label label-warning">' . $item .'</span>';
+
+                        } else {
+                            $emails[] = '<span class="label label-default">' . $item . '</span>';
+                        }
+                    }
+                    return join(\yii\helpers\ArrayHelper::merge($lists, $emails), " ");
+                }
+            ],
             [
                 'attribute' => 'unique_token',
                 'format' => 'html',

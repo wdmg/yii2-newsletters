@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.0.0 (2019-11-30)
+ * Added layouts and views for sent mails
+ * Added process action`s for sent messages
+ 
 ## 0.0.3 (2019-11-26)
  * Added views, email layouts and tagsinput widget for recipients form
  
