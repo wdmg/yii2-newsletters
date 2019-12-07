@@ -22,7 +22,6 @@ use yii\helpers\Json;
  * @property string $layouts
  * @property string $views
  * @property string $recipients
- * @property string $_recipient
  * @property string $unique_token
  * @property integer $status
  * @property string $workflow
@@ -36,7 +35,6 @@ class Newsletters extends ActiveRecord
 {
     const NEWSLETTERS_STATUS_DISABLED = 0;
     const NEWSLETTERS_STATUS_ACTIVE = 1;
-    public $_recipient;
 
     /**
      * {@inheritdoc}
@@ -45,13 +43,6 @@ class Newsletters extends ActiveRecord
     {
         return '{{%newsletters}}';
     }
-
-    /*public function init() {
-        parent::init();
-        if ($this->isNewRecord) {
-            $this->recipients = Json::encode((object) array());
-        }
-    }*/
 
     /**
      * {@inheritdoc}
@@ -87,7 +78,7 @@ class Newsletters extends ActiveRecord
             [['title', 'subject', 'layouts', 'views'], 'string', 'max' => 255],
             [['description', 'content', 'recipients', 'workflow', 'params'], 'string'],
             [['status'], 'boolean'],
-            [['_recipient', 'unique_token', 'created_at', 'updated_at'], 'safe'],
+            [['unique_token', 'created_at', 'updated_at'], 'safe'],
         ];
 
         if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
@@ -276,11 +267,14 @@ class Newsletters extends ActiveRecord
         $emails = [];
         $validator = new EmailValidator();
         $data = \yii\helpers\Json::decode($this->recipients);
-
+        $validator->allowName = true;
         foreach ($data as $key => $item) {
             if (preg_match('/email_id:(\d)/', $key)) {
-                if ($validator->validate($item)) {
-                    $emails[] = $item;
+                preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $item, $matches);
+                if ($email = $matches[0]) {
+                    if ($validator->validate($email)) {
+                        $emails[] = $email;
+                    }
                 }
             } else if (preg_match('/list_id:(\d)/', $key, $match)) {
                 if ($list = $this->getSubscribersFromList(['list_id' => intval($match[1])])) {
@@ -291,11 +285,15 @@ class Newsletters extends ActiveRecord
                     }
                 }
             } else {
-                if ($validator->validate($item)) {
-                    $emails[] = $item;
+                preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $item, $matches);
+                if ($email = $matches[0]) {
+                    if ($validator->validate($email)) {
+                        $emails[] = $email;
+                    }
                 }
             }
         }
+
         return $emails;
     }
 

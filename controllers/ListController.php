@@ -94,6 +94,7 @@ class ListController extends Controller
     {
         $model = $this->findModel($id);
         $validator = new EmailValidator();
+        $validator->allowName = true;
 
         if ($newsletter == "run") {
 
@@ -124,22 +125,19 @@ class ListController extends Controller
                 }
 
                 $views = null;
-                if (!is_null($model->views)) {
-                    if (is_dir(Yii::getAlias($model->views))) {
+                if (!is_null(Yii::getAlias($model->views))) {
 
-                        if (file_exists(Yii::getAlias($model->views.'/html.php')))
-                            $views['html'] = $model->views.'/html';
 
                         if (file_exists(Yii::getAlias($model->views.'-html.php')))
                             $views['html'] = $model->views.'-html';
-
-                        if (file_exists(Yii::getAlias($model->views.'/text.php')))
-                            $views['text'] = $model->views.'/text';
+                        elseif (file_exists(Yii::getAlias($model->views.'/html.php')))
+                            $views['html'] = $model->views.'/html';
 
                         if (file_exists(Yii::getAlias($model->views.'-text.php')))
                             $views['text'] = $model->views.'-text';
+                        elseif (file_exists(Yii::getAlias($model->views.'/text.php')))
+                            $views['text'] = $model->views.'/text';
 
-                    }
                 }
 
                 foreach ($recipients as $email_to) {
@@ -174,7 +172,6 @@ class ListController extends Controller
             $model->updateAttributes(['workflow' => Json::encode([])]);
         }
 
-        die();
         $this->redirect(['list/index']);
     }
 
