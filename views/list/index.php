@@ -137,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'buttons'=> [
                     'refresh' => function($url, $data, $key) {
-                        return Html::a('Refresh&nbsp;<span class="glyphicon glyphicon-refresh"></span>', Url::to(['list/process', 'newsletter' => 'refresh', 'id' => $data['id']]), [
+                        return Html::a('Refresh&nbsp;<span class="glyphicon glyphicon-refresh"></span>', Url::to(['process/refresh', 'id' => $data['id']]), [
                             'title' => Yii::t('app/modules/newsletters', 'Refresh progress'),
                             'data-toggle' => 'refresh-progress',
                             'data-id' => $key,
@@ -145,7 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'stop' => function($url, $data, $key) {
-                        return Html::a('Stop&nbsp;<span class="glyphicon glyphicon-stop"></span>', Url::to(['list/process', 'newsletter' => 'stop', 'id' => $data['id']]), [
+                        return Html::a('Stop&nbsp;<span class="glyphicon glyphicon-stop"></span>', Url::to(['process/stop', 'id' => $data['id']]), [
                             'title' => Yii::t('app/modules/newsletters', 'Stop newsletter'),
                             'class' => 'text-danger',
                             'data-id' => $key,
@@ -153,7 +153,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'pause' => function($url, $data, $key) {
-                        return Html::a('Suspend&nbsp;<span class="glyphicon glyphicon-pause"></span>', Url::to(['list/process', 'newsletter' => 'pause', 'id' => $data['id']]), [
+                        return Html::a('Suspend&nbsp;<span class="glyphicon glyphicon-pause"></span>', Url::to(['process/pause', 'id' => $data['id']]), [
                             'title' => Yii::t('app/modules/newsletters', 'Suspend newsletter'),
                             'class' => 'text-warning',
                             'data-id' => $key,
@@ -161,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'play' => function($url, $data, $key) {
-                        return Html::a('Start&nbsp;<span class="glyphicon glyphicon-play"></span>', Url::to(['list/process', 'newsletter' => 'run', 'id' => $data['id']]), [
+                        return Html::a('Start&nbsp;<span class="glyphicon glyphicon-play"></span>', Url::to(['process/run', 'id' => $data['id']]), [
                             'title' => Yii::t('app/modules/newsletters', 'Start newsletter'),
                             'class' => 'text-success',
                             'data-id' => $key,

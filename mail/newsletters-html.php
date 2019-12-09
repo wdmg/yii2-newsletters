@@ -1,13 +1,14 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\AssetBundle as AppAsset;
+use wdmg\admin\AdminAsset;
 
-$bundle = AppAsset::register($this);
+$bundle = AdminAsset::register($this);
+
 if (isset(Yii::$app->mails))
-    $logotype_url = Yii::$app->mails->getTrackingUrl($bundle->baseUrl . 'images/logo.png');
+    $logotype_url = Yii::$app->mails->getTrackingUrl($bundle->baseUrl . '/images/logotype.png');
 else
-    $logotype_url = $bundle->baseUrl;
+    $logotype_url = $bundle->baseUrl . '/images/logotype.png';
 
 ?>
 <div>

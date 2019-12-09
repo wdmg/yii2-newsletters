@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         1.0.0
+ * @version         1.0.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 W.D.M.Group, Ukraine
@@ -50,7 +50,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.0.0";
+    private $version = "1.0.1";
 
     /**
      * @var integer, priority of initialization
@@ -107,6 +107,9 @@ class Module extends BaseModule
     public function bootstrap($app)
     {
         parent::bootstrap($app);
+
+        if (isset(Yii::$app->params["newsletters.newsletterEmail"]))
+            $this->newsletterEmail = Yii::$app->params["newsletters.newsletterEmail"];
     }
 
     /**

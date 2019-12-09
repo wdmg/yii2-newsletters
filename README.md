@@ -63,7 +63,6 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.1 - Bug fixes and separate process controller
 * v.1.0.0 - Added layouts and views for sent mails, process action`s for sent messages
 * v.0.0.3 - Added views, email layouts and tagsinput widget for recipients form
-* v.0.0.2 - Added translations, base controllers and views
-* v.0.0.1 - Added migrations and models

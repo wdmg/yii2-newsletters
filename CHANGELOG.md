@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.1 (2019-12-09)
+ * Bug fixes and separate process controller
+
 ## 1.0.0 (2019-11-30)
  * Added layouts and views for sent mails
  * Added process action`s for sent messages
