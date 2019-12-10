@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.2 (2019-12-10)
+ * Added reply-to field and fixed deprecated class declaration
+
 ## 1.0.1 (2019-12-09)
  * Bug fixes and separate process controller
 

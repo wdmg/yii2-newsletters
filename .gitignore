@@ -4,3 +4,14 @@ protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+mail/forclients-html.php
+mail/forclients-text.php
+mail/NewslettersAsset.php
+mail/assets/images/behance-circle-colored.png
+mail/assets/images/facebook-circle-colored.png
+mail/assets/images/instagram-circle-colored.png
+mail/assets/images/linkedin-circle-colored.png
+mail/assets/images/logotype-white-en.png
+mail/assets/images/twitter-circle-colored.png
+mail/assets/images/vk-circle-colored.png
+mail/assets/images/waves-bg-light.png
