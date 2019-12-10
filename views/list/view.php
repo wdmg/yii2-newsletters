@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return join(\yii\helpers\ArrayHelper::merge($lists, $emails), " ");
                 }
             ],
+            'reply_to',
             [
                 'attribute' => 'unique_token',
                 'format' => 'html',

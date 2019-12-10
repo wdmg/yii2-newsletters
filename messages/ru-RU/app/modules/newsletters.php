@@ -12,6 +12,7 @@ return [
     'Layout' => 'Лейаут',
     'Layouts' => 'Лейауты',
     'Recipients' => 'Получатели',
+    'Reply to' => 'Адрес ответа',
     'Unique token' => 'Уникальный токен',
     'Status' => 'Статус',
     'Workflow' => 'Процесс',
@@ -34,14 +35,12 @@ return [
     '&larr; Prev page' => '&larr; Предыдущая страница',
     'Next page &rarr;' => 'Следующая страница &rarr;',
 
-
-
-
-
-
     'User' => 'Пользователь',
     'All lists' => 'Все списки',
     'Newsletters list' => 'Список рассылок',
+
+    'The value of field `{attribute}` must be a valid JSON, error: {error}.' => 'Значение аттрибута `{attribute}` должно быть валидным JSON, ошибка: {error}.',
+    'One or more recipients are not a valid email address.' => 'Один или несколько получателей не являются действительным адресом электронной почты.',
 
     'Update newsletter: {email}' => 'Редактирование рассылки: {email}',
     'Newsletter: {title}' => 'Рассылка: {title}',

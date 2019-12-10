@@ -16,6 +16,7 @@ newsletters manager for Yii2
 * [Yii2 Editor](https://github.com/wdmg/yii2-editor) module (required)
 * [Yii2 TagsInput](https://github.com/wdmg/yii2-tagsinput) widget (required)
 * [Yii2 SelectInput](https://github.com/wdmg/yii2-selectinput) widget (required)
+* [Yii2 Validators](https://github.com/wdmg/yii2-validators) widget (required)
 
 # Installation
 To install the module, run the following command in the console:

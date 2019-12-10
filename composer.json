@@ -24,8 +24,9 @@
     "yiisoft/yii2": "^2.0.20",
     "wdmg/yii2-base": "^1.0.1",
     "wdmg/yii2-selectinput": "^1.0.5",
-    "wdmg/yii2-tagsinput": "^1.0.1",
+    "wdmg/yii2-tagsinput": "^1.0.2",
     "wdmg/yii2-helpers": "^1.2.1",
+    "wdmg/yii2-validators": "^1.0.4",
     "wdmg/yii2-editor": "^1.0.6"
   },
   "minimum-stability": "dev",

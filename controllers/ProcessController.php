@@ -34,13 +34,13 @@ class ProcessController extends Controller
     {
         $behaviors = [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'roles' => ['admin'],
@@ -53,7 +53,7 @@ class ProcessController extends Controller
         // If auth manager not configured use default access control
         if(!Yii::$app->authManager) {
             $behaviors['access'] = [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'roles' => ['@'],
@@ -120,6 +120,9 @@ class ProcessController extends Controller
                     $compose->setFrom($email_from)
                         ->setTo($email_to)
                         ->setSubject($model->subject);
+
+                    if (!is_null($model->reply_to))
+                        $compose->setReplyTo($model->reply_to);
 
                     if (is_null($views)) {
                         $compose->setHtmlBody($model->content);

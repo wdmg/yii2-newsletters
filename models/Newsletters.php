@@ -9,6 +9,8 @@ use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\validators\EmailValidator;
+use wdmg\validators\JsonValidator;
+use wdmg\validators\EmailsValidator;
 use yii\helpers\Json;
 
 /**
@@ -22,6 +24,7 @@ use yii\helpers\Json;
  * @property string $layouts
  * @property string $views
  * @property string $recipients
+ * @property string $reply_to
  * @property string $unique_token
  * @property integer $status
  * @property string $workflow
@@ -51,7 +54,7 @@ class Newsletters extends ActiveRecord
     {
         $behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
@@ -59,7 +62,7 @@ class Newsletters extends ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
             'blameable' =>  [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
             ],
@@ -75,8 +78,11 @@ class Newsletters extends ActiveRecord
     {
         $rules = [
             [['title', 'subject', 'content', 'layouts', 'recipients'], 'required'],
-            [['title', 'subject', 'layouts', 'views'], 'string', 'max' => 255],
+            [['title', 'subject', 'layouts', 'reply_to', 'views'], 'string', 'max' => 255],
             [['description', 'content', 'recipients', 'workflow', 'params'], 'string'],
+            [['recipients'], JsonValidator::class, 'message' => Yii::t('app/modules/newsletters', 'The value of field `{attribute}` must be a valid JSON, error: {error}.')],
+            [['recipients'], 'validateRecipients'],
+            [['reply_to'], EmailsValidator::class],
             [['status'], 'boolean'],
             [['unique_token', 'created_at', 'updated_at'], 'safe'],
         ];
@@ -86,6 +92,49 @@ class Newsletters extends ActiveRecord
         }
 
         return $rules;
+    }
+
+    public function validateRecipients($attribute, $params)
+    {
+        $error = false;
+        $validator = new EmailsValidator();
+        $validator->allowName = true;
+
+        $data = \yii\helpers\Json::decode($this->recipients);
+        if ($emails = array_values($data)) {
+            $validator->validate($emails);
+
+
+            /*foreach ($data as $key => $item) {
+                if (preg_match('/email_id:(\d)/', $key)) {
+                    preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $item, $matches);
+                    if ($email = $matches[0]) {
+                        if (!$error && !$validator->validate(trim($email))) {
+                            $error = true;
+                        }
+                    }
+                } else if (preg_match('/list_id:(\d)/', $key, $match)) {
+                    if ($list = $this->getSubscribersFromList(['list_id' => intval($match[1])])) {
+                        foreach ($list as $key => $item) {
+                            if (!$error && !$validator->validate(trim($item['email']))) {
+                                $error = true;
+                            }
+                        }
+                    }
+                } else {
+                    preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $item, $matches);
+                    if ($email = $matches[0]) {
+                        if (!$error && !$validator->validate(trim($email))) {
+                            $error = true;
+                        }
+                    }
+                }
+            }*/
+        }
+/*
+        if ($error) {
+            $this->addError($attribute, Yii::t('app/modules/newsletters', 'One or more recipients are not a valid email address.'));
+        }*/
     }
 
     /**
@@ -118,6 +167,7 @@ class Newsletters extends ActiveRecord
             'layouts' => Yii::t('app/modules/newsletters', 'Layouts'),
             'views' => Yii::t('app/modules/newsletters', 'Views'),
             'recipients' => Yii::t('app/modules/newsletters', 'Recipients'),
+            'reply_to' => Yii::t('app/modules/newsletters', 'Reply to'),
             'unique_token' => Yii::t('app/modules/newsletters', 'Unique token'),
             'status' => Yii::t('app/modules/newsletters', 'Status'),
             'workflow' => Yii::t('app/modules/newsletters', 'Workflow'),
@@ -352,7 +402,7 @@ class Newsletters extends ActiveRecord
     public function getUser()
     {
         if (class_exists('\wdmg\users\models\Users'))
-            return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
+            return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'created_by']);
         else
             return null;
     }
@@ -363,7 +413,7 @@ class Newsletters extends ActiveRecord
     public function getUsers()
     {
         if (class_exists('\wdmg\users\models\Users'))
-            return $this->hasMany(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
+            return $this->hasMany(\wdmg\users\models\Users::class, ['id' => 'created_by']);
         else
             return null;
     }

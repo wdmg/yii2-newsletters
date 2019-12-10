@@ -17,7 +17,7 @@ use wdmg\widgets\TagsInput;
     <?= $form->field($model, 'description')->textarea(['rows' => 4]) ?>
 
     <?= $form->field($model, 'subject')->textarea(['rows' => 2]) ?>
-    <?= $form->field($model, 'content')->widget(Editor::className(), [
+    <?= $form->field($model, 'content')->widget(Editor::class, [
         'options' => [],
         'pluginOptions' => []
     ]) ?>
@@ -33,21 +33,21 @@ use wdmg\widgets\TagsInput;
         echo '</ul><br/>';
     ?>
 
-    <?= $form->field($model, 'layouts')->widget(SelectInput::className(), [
+    <?= $form->field($model, 'layouts')->widget(SelectInput::class, [
         'items' => $model->getLayouts(),
         'options' => [
             'class' => 'form-control'
         ]
     ]); ?>
 
-    <?= $form->field($model, 'views')->widget(SelectInput::className(), [
+    <?= $form->field($model, 'views')->widget(SelectInput::class, [
         'items' => $model->getViews(),
         'options' => [
             'class' => 'form-control'
         ]
     ]); ?>
 
-    <?= $form->field($model, 'recipients')->widget(TagsInput::className(), [
+    <?= $form->field($model, 'recipients')->widget(TagsInput::class, [
         'options' => [
             'class' => 'form-control'
         ],
@@ -59,12 +59,15 @@ use wdmg\widgets\TagsInput;
         ]
     ])->input('text', ['placeholder' => Yii::t('app/modules/newsletters', 'Type recipients...')]); ?>
 
-    <?= $form->field($model, 'status')->widget(SelectInput::className(), [
+    <?= $form->field($model, 'reply_to')->textInput() ?>
+
+    <?= $form->field($model, 'status')->widget(SelectInput::class, [
         'items' => $model->getStatusesList(),
         'options' => [
             'class' => 'form-control'
         ]
     ]); ?>
+
     <hr/>
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/newsletters', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;

@@ -97,6 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 }
             ],
+            'reply_to',
             [
                 'attribute' => 'status',
                 'format' => 'html',
