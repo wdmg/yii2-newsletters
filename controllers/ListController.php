@@ -122,6 +122,7 @@ class ListController extends Controller
                     Yii::t('app/modules/newsletters', 'An error occurred while updating the newsletter.')
                 );
 
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -186,6 +187,14 @@ class ListController extends Controller
             );
 
         return $this->redirect(['index']);
+    }
+
+    public function actionPreview($id)
+    {
+        $model = self::findModel($id);
+        return $this->renderAjax('_preview', [
+            'model' => $model,
+        ]);
     }
 
     /**
