@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.0.3 (2019-12-16)
+ * Added workflow, progress and unlimited execution session
+ * Added newsletter email preview
+
 ## 1.0.2 (2019-12-10)
  * Added reply-to field and fixed deprecated class declaration
 

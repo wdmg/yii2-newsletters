@@ -69,97 +69,148 @@ class ProcessController extends Controller
     public function actionRun($id)
     {
         $model = $this->findModel($id);
+        if ($model) {
+            $model->updateWorkflow('status', 'run');
+        } else {
+            $this->redirect(['list/index']);
+        }
+
         $validator = new EmailValidator();
         $validator->allowName = true;
         $recipients = $model->getRecipients();
-        $recipients = array_unique($recipients);
 
-        $email_from = $this->module->newsletterEmail;
+        if ($recipients) {
+            $model->updateWorkflow('count', count($recipients));
+        } else {
+            $model->updateWorkflow('count', 0);
+            $model->updateWorkflow('status', 'stop');
+            $this->redirect(['list/index']);
+        }
+
+        $newsletterEmail = $this->module->newsletterEmail;
         if (isset(Yii::$app->params['newsletters.newsletterEmail']))
-            $email_from = Yii::$app->params['newsletters.newsletterEmail'];
+            $newsletterEmail = Yii::$app->params['newsletters.newsletterEmail'];
 
-        if (is_null($email_from) || !($validator->validate($email_from)))
+        $unlimitExecution = $this->module->unlimitExecution;
+        if (isset(Yii::$app->params['newsletters.unlimitExecution']))
+            $unlimitExecution = Yii::$app->params['newsletters.unlimitExecution'];
+
+        if ($unlimitExecution) {
+            $max_time = ini_get('max_execution_time');
+            set_time_limit(0);
+        }
+
+        if (is_null($newsletterEmail) || !($validator->validate($newsletterEmail)))
             throw new InvalidConfigException(Yii::t('app/modules/newsletters', 'Param `newsletterEmail` must be a valid email adress.'));
 
-        $workflow = [];
         if ($mailer = Yii::$app->getMailer()) {
 
-            if (!is_null($model->layouts)) {
-                if (is_dir(Yii::getAlias($model->layouts))) {
-                    //$mailer->viewPath = $model->layouts;
+            if ($layouts = $model->getTemplateLayouts()) {
 
-                    if (file_exists(Yii::getAlias($model->layouts.'/layouts/html.php')))
-                        $mailer->htmlLayout = 'layouts/html';
+                if (isset($layouts['html']))
+                    $mailer->htmlLayout = $layouts['html'];
 
-                    if (file_exists(Yii::getAlias($model->layouts.'/layouts/text.php')))
-                        $mailer->htmlLayout = 'layouts/text';
+                if (isset($layouts['text']))
+                    $mailer->textLayout = $layouts['text'];
 
+            } else {
+                throw new InvalidConfigException('Layouts for mail should be defined');
+            }
+
+            if (!$views = $model->getTemplateViews())
+                throw new InvalidConfigException('Views for mail should be defined');
+
+
+            foreach ($recipients as $data) {
+                if (isset($data['email'])) {
+
+                    $email_to = $data['email'];
+
+                    $workflow = $model->getWorkflow();
+                    if (isset($workflow['recipients'])) {
+
+                        if (array_search($email_to, array_column($workflow['recipients'], null)))
+                            continue;
+
+                    }
+
+                    if (isset($workflow['status'])) {
+                        if ($workflow['status'] == "run") {
+                            if ($compose = $mailer->compose($views, array_merge(['content' => $model->content], $data))) {
+
+                                $compose->setFrom($newsletterEmail)->setTo($email_to)->setSubject($model->subject);
+
+                                if (!is_null($model->reply_to)) {
+                                    $compose->setReplyTo($model->reply_to);
+                                }
+
+                                if (is_null($views)) {
+                                    $compose->setHtmlBody($model->content);
+                                    $compose->setTextBody(StringHelper::stripTags($model->content, "", " "));
+                                }
+
+                                if ($compose->send())
+                                    $model->updateWorkflow('recipients', [$email_to => true]);
+                                else
+                                    $model->updateWorkflow('recipients', [$email_to => false]);
+
+                            }
+                        } else {
+                            break;
+                        }
+                    }
                 }
-            }
 
-            $views = null;
-            if (!is_null(Yii::getAlias($model->views))) {
-
-
-                    if (file_exists(Yii::getAlias($model->views.'-html.php')))
-                        $views['html'] = $model->views.'-html';
-                    elseif (file_exists(Yii::getAlias($model->views.'/html.php')))
-                        $views['html'] = $model->views.'/html';
-
-                    if (file_exists(Yii::getAlias($model->views.'-text.php')))
-                        $views['text'] = $model->views.'-text';
-                    elseif (file_exists(Yii::getAlias($model->views.'/text.php')))
-                        $views['text'] = $model->views.'/text';
-
-            }
-
-            foreach ($recipients as $email_to) {
-
-                if ($compose = $mailer->compose($views, ['content' => $model->content])) {
-
-                    $compose->setFrom($email_from)
-                        ->setTo($email_to)
-                        ->setSubject($model->subject);
-
-                    if (!is_null($model->reply_to))
-                        $compose->setReplyTo($model->reply_to);
-
-                    if (is_null($views)) {
-                        $compose->setHtmlBody($model->content);
-                        $compose->setTextBody(StringHelper::stripTags($model->content, "", " "));
-                    }
-
-                    if ($compose->send()) {
-
-                        $workflow[$email_to] = [
-                            'is_send' => true
-                        ];
-                    } else {
-                        $workflow[$email_to] = [
-                            'is_send' => false
-                        ];
-                    }
-
+                if (isset($workflow['recipients'])) {
+                    if (count($workflow['recipients']) == count($recipients))
+                        $model->updateWorkflow('status', 'complete');
                 }
             }
         }
-        $model->updateAttributes(['workflow' => Json::encode($workflow)]);
+
+        if ($unlimitExecution) {
+            set_time_limit(intval($max_time));
+        }
+
         $this->redirect(['list/index']);
     }
 
 
     public function actionPause($id)
     {
+        $model = $this->findModel($id);
+        if ($model) {
+            $model->updateWorkflow('status', 'pause');
+        } else {
+            $this->redirect(['list/index']);
+        }
+
+        //...
+
         $this->redirect(['list/index']);
     }
 
     public function actionRefresh($id)
     {
+        $model = $this->findModel($id);
+        $model->updateAttributes(['workflow' => Json::encode([])]);
+
+        //...
+
         $this->redirect(['list/index']);
     }
 
     public function actionStop($id)
     {
+        $model = $this->findModel($id);
+        if ($model) {
+            $model->updateWorkflow('status', 'stop');
+        } else {
+            $this->redirect(['list/index']);
+        }
+
+        //...
+
         $this->redirect(['list/index']);
     }
 

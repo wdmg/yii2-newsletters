@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         1.0.2
+ * @version         1.0.3
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 W.D.M.Group, Ukraine
@@ -48,9 +48,14 @@ class Module extends BaseModule
     public $newsletterEmail = "no-reply@example.com";
 
     /**
+     * @var string, the flag for unlimit execution time
+     */
+    public $unlimitExecution = false;
+
+    /**
      * @var string the module version
      */
-    private $version = "1.0.2";
+    private $version = "1.0.3";
 
     /**
      * @var integer, priority of initialization
@@ -110,6 +115,9 @@ class Module extends BaseModule
 
         if (isset(Yii::$app->params["newsletters.newsletterEmail"]))
             $this->newsletterEmail = Yii::$app->params["newsletters.newsletterEmail"];
+
+        if (isset(Yii::$app->params["newsletters.unlimitExecution"]))
+            $this->unlimitExecution = Yii::$app->params["newsletters.unlimitExecution"];
     }
 
     /**

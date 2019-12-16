@@ -30,6 +30,17 @@ return [
     'Active' => 'Активно',
     'Disabled' => 'Не активно',
 
+    'Refresh' => 'Обновить',
+    'Refresh progress' => 'Обновить прогресс',
+    'Stop' => 'Стоп',
+    'Stop newsletter' => 'Остановить рассылку',
+    'Suspend' => 'Пауза',
+    'Suspend newsletter' => 'Приостановить рассылку',
+    'Start' => 'Старт',
+    'Start newsletter' => 'Начать рассылку',
+    'Preview' => 'Превью',
+    'Email preview' => 'Предпросмотр письма',
+
     'First page' => 'Первая страница',
     'Last page' => 'Последняя страница',
     '&larr; Prev page' => '&larr; Предыдущая страница',

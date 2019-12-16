@@ -77,8 +77,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         return false;
                 },
             ],
-
-            'workflow',
+            [
+                'attribute' => 'workflow',
+                'format' => 'html',
+                'value' => function($data) {
+                    return var_export($data->workflow, true);
+                },
+            ],
             'params',
 
             'created_at:datetime',
