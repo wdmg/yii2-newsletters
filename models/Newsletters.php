@@ -111,6 +111,7 @@ class Newsletters extends ActiveRecord
      */
     public function beforeSave($insert)
     {
+
         $this->unique_token = Yii::$app->security->generateRandomString(32);
         if (parent::beforeSave($insert)) {
             if ($insert) {
@@ -128,9 +129,10 @@ class Newsletters extends ActiveRecord
     public function afterFind()
     {
 
-        if (!($this->workflow = Json::decode($this->workflow)))
-            $this->workflow = [];
-
+        if (is_string($this->workflow)) {
+            if (!($this->workflow = Json::decode($this->workflow)))
+                $this->workflow = [];
+        }
         parent::afterFind();
     }
 

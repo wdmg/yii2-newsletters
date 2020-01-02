@@ -96,7 +96,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/newsletters', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
-        <?= Html::a(Yii::t('app/modules/newsletters', 'Edit'), ['list/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app/modules/newsletters', 'Edit'), ['list/update', 'id' => $model->id], [
+            'class' => 'btn btn-primary',
+            'data-pjax' => '0'
+        ]) ?>
         <?= Html::a(Yii::t('app/modules/newsletters', 'Delete'), ['list/delete', 'id' => $model->id], [
             'class' => 'btn btn-danger pull-right',
             'data' => [
