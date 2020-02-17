@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.4 (2020-02-17)
+ * Fixed bug with save workflow and recipients list
+ 
 ## 1.0.3 (2019-12-16)
  * Added workflow, progress and unlimited execution session
  * Added newsletter email preview

@@ -106,6 +106,18 @@ class Newsletters extends ActiveRecord
         }
     }
 
+    public function beforeValidate()
+    {
+
+        if (is_array($this->recipients))
+            $this->recipients = \yii\helpers\Json::encode($this->recipients);
+
+        if (is_array($this->workflow))
+            $this->workflow = \yii\helpers\Json::encode($this->workflow);
+
+        return parent::beforeValidate();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -119,8 +131,8 @@ class Newsletters extends ActiveRecord
             }
             return true;
         }
-        return false;
 
+        return false;
     }
 
     /**
