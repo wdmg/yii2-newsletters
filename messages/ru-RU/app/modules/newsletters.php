@@ -17,8 +17,8 @@ return [
     'Status' => 'Статус',
     'Workflow' => 'Процесс',
     'Params' => 'Параметры',
-    'Created at' => "Создано",
-    'Updated at' => "Обновлено",
+    'Created' => "Создано",
+    'Updated' => "Обновлено",
     'Created by' => "Автор создания",
     'Updated by' => "Автор изменений",
 

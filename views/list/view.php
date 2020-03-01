@@ -86,10 +86,52 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'params',
 
-            'created_at:datetime',
-            'created_by',
-            'updated_at:datetime',
-            'updated_by',
+            [
+                'attribute' => 'created',
+                'label' => Yii::t('app/modules/newsletters','Created'),
+                'format' => 'html',
+                'value' => function($data) {
+
+                    $output = "";
+                    if ($user = $data->createdBy) {
+                        $output = Html::a($user->username, ['../admin/users/view/?id='.$user->id], [
+                            'target' => '_blank',
+                            'data-pjax' => 0
+                        ]);
+                    } else if ($data->created_by) {
+                        $output = $data->created_by;
+                    }
+
+                    if (!empty($output))
+                        $output .= ", ";
+
+                    $output .= Yii::$app->formatter->format($data->updated_at, 'datetime');
+                    return $output;
+                }
+            ],
+            [
+                'attribute' => 'updated',
+                'label' => Yii::t('app/modules/newsletters','Updated'),
+                'format' => 'html',
+                'value' => function($data) {
+
+                    $output = "";
+                    if ($user = $data->updatedBy) {
+                        $output = Html::a($user->username, ['../admin/users/view/?id='.$user->id], [
+                            'target' => '_blank',
+                            'data-pjax' => 0
+                        ]);
+                    } else if ($data->updated_by) {
+                        $output = $data->updated_by;
+                    }
+
+                    if (!empty($output))
+                        $output .= ", ";
+
+                    $output .= Yii::$app->formatter->format($data->updated_at, 'datetime');
+                    return $output;
+                }
+            ],
 
         ],
     ]) ?>
