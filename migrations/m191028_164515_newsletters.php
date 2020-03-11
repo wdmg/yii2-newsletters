@@ -43,11 +43,18 @@ class m191028_164515_newsletters extends Migration
         ], $tableOptions);
 
         $this->createIndex(
-            'idx_newsletters',
+            'idx_newsletters1',
             '{{%newsletters}}',
             [
                 'title',
                 'subject',
+            ]
+        );
+
+        $this->createIndex(
+            'idx_newsletters2',
+            '{{%newsletters}}',
+            [
                 'layouts',
                 'views',
                 'unique_token',
@@ -61,7 +68,8 @@ class m191028_164515_newsletters extends Migration
      */
     public function safeDown()
     {
-        $this->dropIndex('idx_newsletters', '{{%newsletters}}');
+        $this->dropIndex('idx_newsletters1', '{{%newsletters}}');
+        $this->dropIndex('idx_newsletters2', '{{%newsletters}}');
         $this->truncateTable('{{%newsletters}}');
         $this->dropTable('{{%newsletters}}');
     }
