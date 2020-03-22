@@ -64,6 +64,8 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [in progress development]
+* v.1.0.6 - Fixed count of emails in views and models
+* v.1.0.5 - Refactoring. Migrations bugfix
 * v.1.0.4 - Fixed bug with save workflow and recipients list
 * v.1.0.3 - Added newsletter email preview, workflow, progress and unlimited execution session
 * v.1.0.2 - Added reply-to field and fixed deprecated class declaration

@@ -324,7 +324,7 @@ class Newsletters extends ActiveRecord
         $data = \yii\helpers\Json::decode($this->recipients);
         $validator->allowName = true;
         foreach ($data as $key => $item) {
-            if (preg_match('/email_id:(\d)/', $key)) {
+            if (preg_match('/email_id:(\d+)/', $key)) {
                 preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $item, $matches);
                 if ($email = $matches[0]) {
                     if ($validator->validate($email)) {
@@ -342,7 +342,7 @@ class Newsletters extends ActiveRecord
 
                     }
                 }
-            } else if (preg_match('/list_id:(\d)/', $key, $match)) {
+            } else if (preg_match('/list_id:(\d+)/', $key, $match)) {
                 if ($list = $this->getSubscribersFromList(['list_id' => intval($match[1]), 'status' => \wdmg\subscribers\models\Subscribers::SUBSCRIBERS_STATUS_ACTIVE], false)) {
                     foreach ($list as $key => $item) {
                         if ($validator->validate($item->email)) {

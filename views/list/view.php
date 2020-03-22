@@ -35,9 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     $data = \yii\helpers\Json::decode($data->recipients);
                     foreach ($data as $key => $item) {
 
-                        if (preg_match('/email_id:(\d)/', $key)) {
+                        if (preg_match('/email_id:(\d+)/', $key)) {
                             $emails[] = '<span class="label label-info">' . $item . '</span>';
-                        } elseif (preg_match('/list_id:(\d)/', $key, $match)) {
+                        } elseif (preg_match('/list_id:(\d+)/', $key, $match)) {
                             $count = $model->getSubscribersCount(['list_id' => intval($match[1])]);
                             if (!is_null($count))
                                 $lists[] = '<span class="label label-warning">' . $item . ' ('.$count.')</span>';
