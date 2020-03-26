@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.7 (2020-03-27)
+ * Up to date dependencies
+
 ## 1.0.6 (2020-03-22)
  * Fixed count of emails in views and models
  
