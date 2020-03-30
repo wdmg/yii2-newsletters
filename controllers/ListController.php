@@ -89,48 +89,6 @@ class ListController extends Controller
         ]);
     }
 
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if (Yii::$app->request->isAjax && ($value = Yii::$app->request->get('value'))) {
-
-            $response = [];
-            $list = $model->getSubscribersList(['like', 'title', $value], ['id', 'title'], true);
-            foreach ($list as $id => $item) {
-                $response['list_id:'.$id] = $item['title'];
-            }
-
-            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
-            foreach ($subscribers as $id => $subscriber) {
-                $response['email_id:'.$id] = ($subscriber['name']) ? $subscriber['name'] . htmlspecialchars(' <'. $subscriber['email'] .'>') : $subscriber['email'];
-            }
-
-            return $this->asJson($response);
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            if ($model->save())
-                Yii::$app->getSession()->setFlash(
-                    'success',
-                    Yii::t('app/modules/newsletters', 'Newsletter has been successfully updated!')
-                );
-            else
-                Yii::$app->getSession()->setFlash(
-                    'danger',
-                    Yii::t('app/modules/newsletters', 'An error occurred while updating the newsletter.')
-                );
-
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'module' => $this->module,
-            'model' => $model
-        ]);
-    }
-
     public function actionCreate()
     {
         $model = new Newsletters();
@@ -153,16 +111,45 @@ class ListController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-            if ($model->save())
+            if ($model->save()) {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully added.',
+                        $this->uniqueId . ":" . $this->action->id,
+                        'success',
+                        1
+                    );
+                }
+
                 Yii::$app->getSession()->setFlash(
                     'success',
                     Yii::t('app/modules/newsletters', 'Newsletter has been successfully created!')
                 );
-            else
+            } else {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        'An error occurred while add the new newsletter: ' . $model->title,
+                        $this->uniqueId . ":" . $this->action->id,
+                        'danger',
+                        1
+                    );
+                }
+
                 Yii::$app->getSession()->setFlash(
                     'danger',
                     Yii::t('app/modules/newsletters', 'An error occurred while creating the newsletter.')
                 );
+            }
 
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -173,18 +160,118 @@ class ListController extends Controller
         ]);
     }
 
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if (Yii::$app->request->isAjax && ($value = Yii::$app->request->get('value'))) {
+
+            $response = [];
+            $list = $model->getSubscribersList(['like', 'title', $value], ['id', 'title'], true);
+            foreach ($list as $id => $item) {
+                $response['list_id:'.$id] = $item['title'];
+            }
+
+            $subscribers = $model->getSubscribers(['like', 'email', $value], ['id', 'name', 'email'], true);
+            foreach ($subscribers as $id => $subscriber) {
+                $response['email_id:'.$id] = ($subscriber['name']) ? $subscriber['name'] . htmlspecialchars(' <'. $subscriber['email'] .'>') : $subscriber['email'];
+            }
+
+            return $this->asJson($response);
+        }
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->save()) {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully updated.',
+                        $this->uniqueId . ":" . $this->action->id,
+                        'success',
+                        1
+                    );
+                }
+
+                Yii::$app->getSession()->setFlash(
+                    'success',
+                    Yii::t('app/modules/newsletters', 'Newsletter has been successfully updated!')
+                );
+            } else {
+                // Log activity
+                if (
+                    class_exists('\wdmg\activity\models\Activity') &&
+                    $this->module->moduleLoaded('activity') &&
+                    isset(Yii::$app->activity)
+                ) {
+                    Yii::$app->activity->set(
+                        'An error occurred while updating the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
+                        $this->uniqueId . ":" . $this->action->id,
+                        'danger',
+                        1
+                    );
+                }
+
+                Yii::$app->getSession()->setFlash(
+                    'danger',
+                    Yii::t('app/modules/newsletters', 'An error occurred while updating the newsletter.')
+                );
+            }
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'module' => $this->module,
+            'model' => $model
+        ]);
+    }
+
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete())
+        if ($this->findModel($id)->delete()) {
+            // Log activity
+            if (
+                class_exists('\wdmg\activity\models\Activity') &&
+                $this->module->moduleLoaded('activity') &&
+                isset(Yii::$app->activity)
+            ) {
+                Yii::$app->activity->set(
+                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully deleted.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'success',
+                    1
+                );
+            }
+
             Yii::$app->getSession()->setFlash(
                 'success',
                 Yii::t('app/modules/newsletters', 'Newsletter has been successfully deleted!')
             );
-        else
+        } else {
+            // Log activity
+            if (
+                class_exists('\wdmg\activity\models\Activity') &&
+                $this->module->moduleLoaded('activity') &&
+                isset(Yii::$app->activity)
+            ) {
+                Yii::$app->activity->set(
+                    'An error occurred while deleting the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'danger',
+                    1
+                );
+            }
+
             Yii::$app->getSession()->setFlash(
                 'danger',
                 Yii::t('app/modules/newsletters', 'An error occurred while deleting the newsletter.')
             );
+        }
 
         return $this->redirect(['index']);
     }
