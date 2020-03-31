@@ -113,18 +113,12 @@ class ListController extends Controller
 
             if ($model->save()) {
                 // Log activity
-                if (
-                    class_exists('\wdmg\activity\models\Activity') &&
-                    $this->module->moduleLoaded('activity') &&
-                    isset(Yii::$app->activity)
-                ) {
-                    Yii::$app->activity->set(
-                        'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully added.',
-                        $this->uniqueId . ":" . $this->action->id,
-                        'success',
-                        1
-                    );
-                }
+                $this->module->logActivity(
+                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully added.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'success',
+                    1
+                );
 
                 Yii::$app->getSession()->setFlash(
                     'success',
@@ -132,18 +126,12 @@ class ListController extends Controller
                 );
             } else {
                 // Log activity
-                if (
-                    class_exists('\wdmg\activity\models\Activity') &&
-                    $this->module->moduleLoaded('activity') &&
-                    isset(Yii::$app->activity)
-                ) {
-                    Yii::$app->activity->set(
-                        'An error occurred while add the new newsletter: ' . $model->title,
-                        $this->uniqueId . ":" . $this->action->id,
-                        'danger',
-                        1
-                    );
-                }
+                $this->module->logActivity(
+                    'An error occurred while add the new newsletter: ' . $model->title,
+                    $this->uniqueId . ":" . $this->action->id,
+                    'danger',
+                    1
+                );
 
                 Yii::$app->getSession()->setFlash(
                     'danger',
@@ -184,18 +172,12 @@ class ListController extends Controller
 
             if ($model->save()) {
                 // Log activity
-                if (
-                    class_exists('\wdmg\activity\models\Activity') &&
-                    $this->module->moduleLoaded('activity') &&
-                    isset(Yii::$app->activity)
-                ) {
-                    Yii::$app->activity->set(
-                        'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully updated.',
-                        $this->uniqueId . ":" . $this->action->id,
-                        'success',
-                        1
-                    );
-                }
+                $this->module->logActivity(
+                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully updated.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'success',
+                    1
+                );
 
                 Yii::$app->getSession()->setFlash(
                     'success',
@@ -203,18 +185,12 @@ class ListController extends Controller
                 );
             } else {
                 // Log activity
-                if (
-                    class_exists('\wdmg\activity\models\Activity') &&
-                    $this->module->moduleLoaded('activity') &&
-                    isset(Yii::$app->activity)
-                ) {
-                    Yii::$app->activity->set(
-                        'An error occurred while updating the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
-                        $this->uniqueId . ":" . $this->action->id,
-                        'danger',
-                        1
-                    );
-                }
+                $this->module->logActivity(
+                    'An error occurred while updating the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
+                    $this->uniqueId . ":" . $this->action->id,
+                    'danger',
+                    1
+                );
 
                 Yii::$app->getSession()->setFlash(
                     'danger',
@@ -235,18 +211,12 @@ class ListController extends Controller
     {
         if ($this->findModel($id)->delete()) {
             // Log activity
-            if (
-                class_exists('\wdmg\activity\models\Activity') &&
-                $this->module->moduleLoaded('activity') &&
-                isset(Yii::$app->activity)
-            ) {
-                Yii::$app->activity->set(
-                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully deleted.',
-                    $this->uniqueId . ":" . $this->action->id,
-                    'success',
-                    1
-                );
-            }
+            $this->module->logActivity(
+                'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully deleted.',
+                $this->uniqueId . ":" . $this->action->id,
+                'success',
+                1
+            );
 
             Yii::$app->getSession()->setFlash(
                 'success',
@@ -254,18 +224,12 @@ class ListController extends Controller
             );
         } else {
             // Log activity
-            if (
-                class_exists('\wdmg\activity\models\Activity') &&
-                $this->module->moduleLoaded('activity') &&
-                isset(Yii::$app->activity)
-            ) {
-                Yii::$app->activity->set(
-                    'An error occurred while deleting the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
-                    $this->uniqueId . ":" . $this->action->id,
-                    'danger',
-                    1
-                );
-            }
+            $this->module->logActivity(
+                'An error occurred while deleting the newsletter `' . $model->title . '` with ID `' . $model->id . '`.',
+                $this->uniqueId . ":" . $this->action->id,
+                'danger',
+                1
+            );
 
             Yii::$app->getSession()->setFlash(
                 'danger',
