@@ -86,18 +86,12 @@ class ProcessController extends Controller
             $model->updateWorkflow('status', 'stop');
 
             // Log activity
-            if (
-                class_exists('\wdmg\activity\models\Activity') &&
-                $this->module->moduleLoaded('activity') &&
-                isset(Yii::$app->activity)
-            ) {
-                Yii::$app->activity->set(
-                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been stopped.',
-                    $this->uniqueId . ":" . $this->action->id,
-                    'warning',
-                    1
-                );
-            }
+            $this->module->logActivity(
+                'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been stopped.',
+                $this->uniqueId . ":" . $this->action->id,
+                'warning',
+                1
+            );
 
             $this->redirect(['list/index']);
         }
@@ -136,18 +130,12 @@ class ProcessController extends Controller
                 throw new InvalidConfigException('Views for mail should be defined');
 
             // Log activity
-            if (
-                class_exists('\wdmg\activity\models\Activity') &&
-                $this->module->moduleLoaded('activity') &&
-                isset(Yii::$app->activity)
-            ) {
-                Yii::$app->activity->set(
-                    'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has begun processed.',
-                    $this->uniqueId . ":" . $this->action->id,
-                    'info',
-                    1
-                );
-            }
+            $this->module->logActivity(
+                'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has begun processed.',
+                $this->uniqueId . ":" . $this->action->id,
+                'info',
+                1
+            );
 
             foreach ($recipients as $data) {
                 if (isset($data['email'])) {
@@ -194,18 +182,12 @@ class ProcessController extends Controller
                         $model->updateWorkflow('status', 'complete');
 
                         // Log activity
-                        if (
-                            class_exists('\wdmg\activity\models\Activity') &&
-                            $this->module->moduleLoaded('activity') &&
-                            isset(Yii::$app->activity)
-                        ) {
-                            Yii::$app->activity->set(
-                                'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully processed.',
-                                $this->uniqueId . ":" . $this->action->id,
-                                'success',
-                                1
-                            );
-                        }
+                        $this->module->logActivity(
+                            'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully processed.',
+                            $this->uniqueId . ":" . $this->action->id,
+                            'success',
+                            1
+                        );
                     }
                 }
             }
