@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.*
+ * Update README.md and dependencies
+
 ## 1.0.8 (2020-03-31)
  * Refactoring log of activity
  * Log activity

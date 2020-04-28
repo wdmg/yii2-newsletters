@@ -1,11 +1,11 @@
 [![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.33-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
-[![Github all releases](https://img.shields.io/github/downloads/wdmg/yii2-newsletters/total.svg)](https://GitHub.com/wdmg/yii2-newsletters/releases/)
+[![Downloads](https://img.shields.io/packagist/dt/wdmg/yii2-newsletters.svg)](https://packagist.org/packages/wdmg/yii2-newsletters)
+[![Packagist Version](https://img.shields.io/packagist/v/wdmg/yii2-newsletters.svg)](https://packagist.org/packages/wdmg/yii2-newsletters)
 ![Progress](https://img.shields.io/badge/progress-in_development-red.svg)
 [![GitHub license](https://img.shields.io/github/license/wdmg/yii2-newsletters.svg)](https://github.com/wdmg/yii2-newsletters/blob/master/LICENSE)
-![GitHub release](https://img.shields.io/github/release/wdmg/yii2-newsletters/all.svg)
 
 # Yii2 newsletters
-newsletters manager for Yii2
+Newsletters manager for Yii2
 
 # Requirements 
 * PHP 5.6 or higher
@@ -16,7 +16,7 @@ newsletters manager for Yii2
 * [Yii2 Editor](https://github.com/wdmg/yii2-editor) module (required)
 * [Yii2 TagsInput](https://github.com/wdmg/yii2-tagsinput) widget (required)
 * [Yii2 SelectInput](https://github.com/wdmg/yii2-selectinput) widget (required)
-* [Yii2 Validators](https://github.com/wdmg/yii2-validators) widget (required)
+* [Yii2 Validators](https://github.com/wdmg/yii2-validators) (required)
 
 # Installation
 To install the module, run the following command in the console:
