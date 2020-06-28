@@ -1,15 +1,21 @@
-[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.33-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
+[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.35-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
 [![Downloads](https://img.shields.io/packagist/dt/wdmg/yii2-newsletters.svg)](https://packagist.org/packages/wdmg/yii2-newsletters)
 [![Packagist Version](https://img.shields.io/packagist/v/wdmg/yii2-newsletters.svg)](https://packagist.org/packages/wdmg/yii2-newsletters)
-![Progress](https://img.shields.io/badge/progress-in_development-red.svg)
+![Progress](https://img.shields.io/badge/progress-ready_to_use-green.svg)
 [![GitHub license](https://img.shields.io/github/license/wdmg/yii2-newsletters.svg)](https://github.com/wdmg/yii2-newsletters/blob/master/LICENSE)
 
-# Yii2 newsletters
-Newsletters manager for Yii2
+<img src="./docs/images/yii2-newsletters.png" width="100%" alt="Yii2 Newsletters" />
+
+# Yii2 Newsletters
+Newsletters manager for Yii2.
+
+This module is an integral part of the [Butterfly.СMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
+
+Copyrights (c) 2019-2020 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
 # Requirements 
 * PHP 5.6 or higher
-* Yii2 v.2.0.33 and newest
+* Yii2 v.2.0.35 and newest
 * [Yii2 Base](https://github.com/wdmg/yii2-base) module (required)
 * [Yii2 Mailer](https://github.com/wdmg/yii2-mailer) module (optionality)
 * [Yii2 Options](https://github.com/wdmg/yii2-options) module (optionality)
@@ -63,7 +69,8 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
         ]);
     ?>
 
-# Status and version [in progress development]
+# Status and version [ready to use]
+* v.1.0.9 - Update dependencies, README.md
 * v.1.0.8 - Log activity
 * v.1.0.7 - Up to date dependencies
 * v.1.0.6 - Fixed count of emails in views and models

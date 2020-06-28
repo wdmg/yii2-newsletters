@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 1.0.*
+## 1.0.9 (2020-06-28)
  * Update README.md and dependencies
 
 ## 1.0.8 (2020-03-31)

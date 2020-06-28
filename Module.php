@@ -6,7 +6,7 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         1.0.8
+ * @version         1.0.9
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -55,7 +55,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.0.8";
+    private $version = "1.0.9";
 
     /**
      * @var integer, priority of initialization
@@ -100,7 +100,7 @@ class Module extends BaseModule
         $items = [
             'label' => $this->name,
             'url' => [$this->routePrefix . '/'. $this->id],
-            'icon' => 'fa fa-fw fa-rocket',
+            'icon' => 'fa fa-fw fa-mail-bulk',
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id])
         ];
         return $items;
