@@ -240,16 +240,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'visibleButtons' => [
                     'update' => function ($model) {
-                        return (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
-                                'created_by' => $model->created_by,
-                                'updated_by' => $model->updated_by
-                            ]));
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
+                                'created_by' => $data->created_by,
+                                'updated_by' => $data->updated_by
+                            ])) {
+                            return false;
+                        }
+
+                        return true;
                     },
                     'delete' => function ($model) {
-                        return (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
-                                'created_by' => $model->created_by,
-                                'updated_by' => $model->updated_by
-                            ]));
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
+                                'created_by' => $data->created_by,
+                                'updated_by' => $data->updated_by
+                            ])) {
+                            return false;
+                        }
+
+                        return true;
                     },
                     'stop' => function ($model) {
                         if (isset($model->workflow['status'])) {
