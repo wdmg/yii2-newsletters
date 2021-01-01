@@ -72,9 +72,8 @@ return [
     'Newsletter has been successfully deleted!' => 'Рассылка была успешно удалёна!',
     'An error occurred while deleting the newsletter.' => 'Произошла ошибка при удалении рассылки.',
 
-
-
-
+    'Error {code}. Access Denied' => 'Ошибка {code}. Доступ не разрешен',
+    'You are not allowed to view this page.' => 'Вам не разрешено просматривать эту страницу.',
 
 ];
 

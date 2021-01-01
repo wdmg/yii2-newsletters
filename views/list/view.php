@@ -138,17 +138,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="form-group">
         <?= Html::a(Yii::t('app/modules/newsletters', '&larr; Back to list'), ['list/index'], ['class' => 'btn btn-default pull-left']) ?>&nbsp;
-        <?= Html::a(Yii::t('app/modules/newsletters', 'Edit'), ['list/update', 'id' => $model->id], [
-            'class' => 'btn btn-primary',
-            'data-pjax' => '0'
-        ]) ?>
-        <?= Html::a(Yii::t('app/modules/newsletters', 'Delete'), ['list/delete', 'id' => $model->id], [
+        <?php if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
+            'created_by' => $model->created_by,
+            'updated_by' => $model->updated_by
+        ])) : ?>
+            <?= Html::a(Yii::t('app/modules/newsletters', 'Edit'), ['list/update', 'id' => $model->id], [
+                'class' => 'btn btn-primary',
+                'data-pjax' => '0'
+            ]) ?>
+            <?= Html::a(Yii::t('app/modules/newsletters', 'Delete'), ['list/delete', 'id' => $model->id], [
             'class' => 'btn btn-danger pull-right',
             'data' => [
                 'confirm' => Yii::t('app/modules/newsletters', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>
+        <?php endif; ?>
     </div>
 
 </div>

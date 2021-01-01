@@ -6,10 +6,10 @@ namespace wdmg\newsletters;
  * Yii2 Newsletters
  *
  * @category        Module
- * @version         1.0.9
+ * @version         1.0.10
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-newsletters
- * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
+ * @copyright       Copyright (c) 2019 - 2021 W.D.M.Group, Ukraine
  * @license         https://opensource.org/licenses/MIT Massachusetts Institute of Technology (MIT) License
  *
  */
@@ -55,7 +55,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.0.9";
+    private $version = "1.0.10";
 
     /**
      * @var integer, priority of initialization

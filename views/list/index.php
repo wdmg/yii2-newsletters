@@ -239,6 +239,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 },
                 'visibleButtons' => [
+                    'update' => function ($model) {
+                        return (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
+                                'created_by' => $model->created_by,
+                                'updated_by' => $model->updated_by
+                            ]));
+                    },
+                    'delete' => function ($model) {
+                        return (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && Yii::$app->user->can('updatePosts', [
+                                'created_by' => $model->created_by,
+                                'updated_by' => $model->updated_by
+                            ]));
+                    },
                     'stop' => function ($model) {
                         if (isset($model->workflow['status'])) {
                             return ($model->workflow['status'] == "run");
@@ -270,10 +282,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'maxButtonCount' => 5,
             'activePageCssClass' => 'active',
-            'prevPageCssClass' => '',
-            'nextPageCssClass' => '',
-            'firstPageCssClass' => 'previous',
-            'lastPageCssClass' => 'next',
+            'prevPageCssClass' => 'prev',
+            'nextPageCssClass' => 'next',
+            'firstPageCssClass' => 'first',
+            'lastPageCssClass' => 'last',
             'firstPageLabel' => Yii::t('app/modules/newsletters', 'First page'),
             'lastPageLabel'  => Yii::t('app/modules/newsletters', 'Last page'),
             'prevPageLabel'  => Yii::t('app/modules/newsletters', '&larr; Prev page'),

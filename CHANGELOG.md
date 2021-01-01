@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.10 (2021-01-02)
+ * RBAC implementation
+ 
 ## 1.0.9 (2020-06-28)
  * Update README.md and dependencies
 
