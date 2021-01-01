@@ -66,7 +66,7 @@ class ListController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['update', 'create'],
+                        'actions' => ['update', 'create', 'delete'],
                         'roles' => ['updatePosts'],
                         'allow' => true
                     ], [
@@ -223,7 +223,9 @@ class ListController extends Controller
 
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()) {
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
             // Log activity
             $this->module->logActivity(
                 'Newsletter `' . $model->title . '` with ID `' . $model->id . '` has been successfully deleted.',

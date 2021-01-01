@@ -241,8 +241,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'visibleButtons' => [
                     'update' => function ($model) {
                         if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                'created_by' => $data->created_by,
-                                'updated_by' => $data->updated_by
+                                'created_by' => $model->created_by,
+                                'updated_by' => $model->updated_by
                             ])) {
                             return false;
                         }
@@ -251,15 +251,32 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'delete' => function ($model) {
                         if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && !Yii::$app->user->can('updatePosts', [
-                                'created_by' => $data->created_by,
-                                'updated_by' => $data->updated_by
+                                'created_by' => $model->created_by,
+                                'updated_by' => $model->updated_by
                             ])) {
                             return false;
                         }
 
                         return true;
                     },
+                    'refresh' => function ($model) {
+
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && (!Yii::$app->user->can('editor'))) {
+                            return false;
+                        }
+
+                        if (isset($model->workflow['status'])) {
+                            return !($model->workflow['status'] == "run");
+                        }
+
+                        return true;
+                    },
                     'stop' => function ($model) {
+
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && (!Yii::$app->user->can('editor'))) {
+                            return false;
+                        }
+
                         if (isset($model->workflow['status'])) {
                             return ($model->workflow['status'] == "run");
                         }
@@ -267,6 +284,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         return false;
                     },
                     'pause' => function ($model) {
+
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && (!Yii::$app->user->can('editor'))) {
+                            return false;
+                        }
+
                         if (isset($model->workflow['status'])) {
                             return ($model->workflow['status'] == "run");
                         }
@@ -274,6 +296,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         return false;
                     },
                     'play' => function ($model) {
+
+                        if (Yii::$app->authManager && $this->context->module->moduleExist('rbac') && (!Yii::$app->user->can('editor'))) {
+                            return false;
+                        }
+
                         if (isset($model->workflow['status'])) {
                             return !($model->workflow['status'] == "run");
                         }
