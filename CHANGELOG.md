@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.0.*
+ * Added counter stats method
+ 
 ## 1.0.10 (2021-01-02)
  * RBAC implementation
  

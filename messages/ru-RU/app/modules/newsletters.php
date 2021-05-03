@@ -63,6 +63,8 @@ return [
     'Delete' => 'Удалить',
     'Save' => 'Сохранить',
 
+    'Mailings made in the last 24 hours' => 'Произведено рассылок за последние сутки',
+
     'Newsletter has been successfully updated!' => 'Рассылка была успешно обновлена!',
     'An error occurred while updating the newsletter.' => 'Произошла ошибка при обновлении рассылки.',
 
