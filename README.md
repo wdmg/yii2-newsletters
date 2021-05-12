@@ -70,6 +70,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.0.11 - Show modal call fixed and counter stats
 * v.1.0.10 - RBAC implementation
 * v.1.0.9 - Update dependencies, README.md
 * v.1.0.8 - Log activity

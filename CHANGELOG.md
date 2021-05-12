@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.0.*
+## 1.0.11 (2021-05-12)
+ * Show modal call fixed
  * Added counter stats method
  
 ## 1.0.10 (2021-01-02)
