@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 2.0.0 (2023-06-25)
+ * Some fix, update copyrights
+
 ## 1.0.11 (2021-05-12)
  * Show modal call fixed
  * Added counter stats method

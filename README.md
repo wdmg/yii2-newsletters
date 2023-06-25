@@ -11,7 +11,7 @@ Newsletters manager for Yii2.
 
 This module is an integral part of the [Butterfly.СMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
 
-Copyrights (c) 2019-2021 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
+Copyrights (c) 2019-2023 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
 # Requirements 
 * PHP 5.6 or higher
@@ -70,11 +70,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.2.0.0 - Some fix, update copyrights
 * v.1.0.11 - Show modal call fixed and counter stats
 * v.1.0.10 - RBAC implementation
 * v.1.0.9 - Update dependencies, README.md
-* v.1.0.8 - Log activity
-* v.1.0.7 - Up to date dependencies
-* v.1.0.6 - Fixed count of emails in views and models
-* v.1.0.5 - Refactoring. Migrations bugfix
-* v.1.0.4 - Fixed bug with save workflow and recipients list
